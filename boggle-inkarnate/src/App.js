@@ -35,6 +35,79 @@ function App() {
   const row = new Array(boardSize);
 
   const [boardLayout, setBoardLayout] = useState([row, row, row, row, row]);
+  const [letterSelected, setLetterSelected] = useState(false);
+  const [currentWord, setCurrentWord] = useState('');
+  // const [validCells, setValidCells] = useState(null);
+  const [lastSelected, setLastSelected] = useState(null);
+
+  const selectLetter = (row, cell) => {
+    const letter = boardLayout[row][cell];
+    let wordInProgress = currentWord;
+    // if (!letterSelected) {
+
+    if (lastSelected) {
+      // console.log('lastSelected: ', lastSelected);
+      // console.log('lastSelected[0] + 1: ', lastSelected[0] + 1);
+      // console.log('lastSelected[1] + 1: ', lastSelected[1] + 1);
+      // console.log('lastSelected[1] - 1: ', lastSelected[1] - 1);
+      // console.log('lastSelected[1]: ', lastSelected[1]);
+      // console.log('row: ', row);
+
+      if (
+        row === lastSelected[0] + 1 ||
+        row === lastSelected[0] - 1 ||
+        row === lastSelected[0]
+      ) {
+        if (
+          cell === lastSelected[1] + 1 ||
+          cell === lastSelected[1] - 1 ||
+          cell === lastSelected[1]
+        ) {
+          console.log('VALID CELL: ', letter);
+        } else {
+          console.log('INVALID CELL: ', letter);
+        }
+      } else {
+        console.log('INVALID CELL: ', letter);
+      }
+    }
+
+    console.log('wordInProgress + letter: ', wordInProgress + letter);
+    setCurrentWord(wordInProgress + letter);
+
+    setLastSelected([row, cell]);
+
+    // const newValidCells = [];
+
+    // if(row + 1 < 5) {
+    //   if(cell + 1 < 5) {
+    //     newValidCells.push([row + 1, cell])
+    //     newValidCells.push([row + 1, cell +1]);
+    //   }
+    //   if(cell - 1 >= 0) {
+    //     newValidCells.push([row + 1, cell -1 ])
+    //   }
+    // }
+    // if(row - 1 >= 0) {
+    //   if(cell + 1 < 5) {
+    //     newValidCells.push([row - 1, cell])
+    //     newValidCells.push([row - 1, cell +1]);
+    //   }
+    //   if(cell - 1 >= 0) {
+    //     newValidCells.push([row - 1, cell -1 ])
+    //   }
+    // }
+    // if(row + 1)
+    // }
+  };
+
+  const letterHoverStart = () => {
+    return;
+  };
+
+  const letterHoverEnd = () => {
+    return;
+  };
 
   const randomizeBoard = () => {
     let copyDice = [...dice];
@@ -68,14 +141,14 @@ function App() {
       }}
     >
       <h1>Boggle</h1>
-      <Board boardLayout={boardLayout}></Board>
+      <Board selectLetter={selectLetter} boardLayout={boardLayout}></Board>
       <StartButton randomizeBoard={randomizeBoard}></StartButton>
     </div>
   );
 }
 
 function Board(props) {
-  const boardLayout = props.boardLayout;
+  const { boardLayout, selectLetter } = props;
   // randomizeBoard();
 
   return (
@@ -109,6 +182,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(0, 0)}
       >
         {boardLayout[0][0]}
       </div>
@@ -121,6 +195,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(0, 1)}
       >
         {boardLayout[0][1]}
       </div>
@@ -133,6 +208,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(0, 2)}
       >
         {boardLayout[0][2]}
       </div>
@@ -145,6 +221,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(0, 3)}
       >
         {boardLayout[0][3]}
       </div>
@@ -157,6 +234,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(0, 4)}
       >
         {boardLayout[0][4]}
       </div>
@@ -169,6 +247,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(1, 0)}
       >
         {boardLayout[1][0]}
       </div>
@@ -181,6 +260,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(1, 1)}
       >
         {boardLayout[1][1]}
       </div>
@@ -193,6 +273,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(1, 2)}
       >
         {boardLayout[1][2]}
       </div>
@@ -205,6 +286,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(1, 3)}
       >
         {boardLayout[1][3]}
       </div>
@@ -217,6 +299,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(1, 4)}
       >
         {boardLayout[1][4]}
       </div>
@@ -229,6 +312,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(2, 0)}
       >
         {boardLayout[2][0]}
       </div>
@@ -241,6 +325,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(2, 1)}
       >
         {boardLayout[2][1]}
       </div>
@@ -253,6 +338,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(2, 2)}
       >
         {boardLayout[2][2]}
       </div>
@@ -265,6 +351,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(2, 3)}
       >
         {boardLayout[2][3]}
       </div>
@@ -277,6 +364,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(2, 4)}
       >
         {boardLayout[2][4]}
       </div>
@@ -289,6 +377,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(3, 0)}
       >
         {boardLayout[3][0]}
       </div>
@@ -301,6 +390,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(3, 1)}
       >
         {boardLayout[3][1]}
       </div>
@@ -313,6 +403,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(3, 2)}
       >
         {boardLayout[3][2]}
       </div>
@@ -325,6 +416,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(3, 3)}
       >
         {boardLayout[3][3]}
       </div>
@@ -337,6 +429,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(3, 4)}
       >
         {boardLayout[3][4]}
       </div>
@@ -349,6 +442,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(4, 0)}
       >
         {boardLayout[4][0]}
       </div>
@@ -361,6 +455,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(4, 1)}
       >
         {boardLayout[4][1]}
       </div>
@@ -373,6 +468,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(4, 2)}
       >
         {boardLayout[4][2]}
       </div>
@@ -385,6 +481,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(4, 3)}
       >
         {boardLayout[4][3]}
       </div>
@@ -397,6 +494,7 @@ function Board(props) {
           fontWeight: 'bold',
           fontSize: '50px',
         }}
+        onClick={() => selectLetter(4, 4)}
       >
         {boardLayout[4][4]}
       </div>
