@@ -34,6 +34,10 @@ function App() {
   const boardSize = 5;
   const row = new Array(boardSize);
 
+  const [usedWords, setUsedWords] = useState([]);
+
+  const [gamePlaying, setGamePlaying] = useState(false);
+
   const [boardLayout, setBoardLayout] = useState([row, row, row, row, row]);
   const [letterSelected, setLetterSelected] = useState(false);
   const [currentWord, setCurrentWord] = useState('');
@@ -112,6 +116,13 @@ function App() {
     return;
   };
 
+  const addWord = () => {
+    setUsedWords([...usedWords, currentWord]);
+    setLastSelected(null);
+    setCurrentWord('');
+    setLetterSelected(false);
+  };
+
   const randomizeBoard = () => {
     let copyDice = [...dice];
     const copyBoard = [...boardLayout];
@@ -132,6 +143,8 @@ function App() {
       copyBoard[i] = currentRow;
     }
     setBoardLayout(copyBoard);
+
+    setGamePlaying(true);
   };
   return (
     <div
@@ -145,19 +158,32 @@ function App() {
     >
       <h1>Boggle</h1>
       <Board selectLetter={selectLetter} boardLayout={boardLayout}></Board>
-      <CurrentWordDisplay currentWord={currentWord}></CurrentWordDisplay>
-      <StartButton randomizeBoard={randomizeBoard}></StartButton>
+      <CurrentWordDisplay
+        usedWords={usedWords}
+        currentWord={currentWord}
+      ></CurrentWordDisplay>
+      <StartButton
+        gamePlaying={gamePlaying}
+        addWord={addWord}
+        randomizeBoard={randomizeBoard}
+      ></StartButton>
     </div>
   );
 }
 
 function CurrentWordDisplay(props) {
-  const { currentWord } = props;
+  const { currentWord, usedWords } = props;
 
   return (
     <div>
       <h2>Current Word: </h2>
       <h3>{currentWord && currentWord}</h3>
+      <h2>Used Words: </h2>
+      <h3>
+        {usedWords.map((word) => {
+          return <div>{word}</div>;
+        })}
+      </h3>
     </div>
   );
 }
@@ -518,7 +544,19 @@ function Board(props) {
 }
 
 function StartButton(props) {
-  return <button onClick={props.randomizeBoard}>Start Game</button>;
+  const buttonAction = () => {
+    if (props.gamePlaying) {
+      props.addWord();
+    } else {
+      props.randomizeBoard();
+    }
+  };
+
+  return (
+    <button onClick={buttonAction}>
+      {!props.gamePlaying ? 'Start Game' : 'Add Word'}
+    </button>
+  );
 }
 
 export default App;
