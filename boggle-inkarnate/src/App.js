@@ -32,14 +32,45 @@ function App() {
     'ooottu',
   ];
 
+  const createDictionary = () => {
+    fetch(
+      'https://raw.githubusercontent.com/redbo/scrabble/master/dictionary.txt',
+    )
+      .then((res) => res.text())
+      .then((text) => {
+        // console.log('Res Text: ', text);
+        const dictionary = text.split('\n');
+        console.log('dictionary: ', dictionary);
+        setDictionary(dictionary);
+      });
+
+    // .then((response) => response.json())
+    // .then((data) => console.log(data));
+  };
+
+  const [dictionary, setDictionary] = useState();
+
   const [usedWords, setUsedWords] = useState([]);
+
+  const wordInDictionary = (wordToCheck) => {
+    return dictionary.includes(wordToCheck.toUpperCase());
+  };
+
+  useEffect(() => {
+    createDictionary();
+  }, []);
+
   useEffect(() => {
     if (usedWords.length > 0) {
       let newPoints;
 
-      const lastWordLength = usedWords[usedWords.length - 1].length;
+      const lastWord = usedWords[usedWords.length - 1];
 
-      if (lastWordLength >= 8) {
+      const lastWordLength = lastWord.length;
+
+      if (!wordInDictionary(lastWord)) {
+        newPoints = -2;
+      } else if (lastWordLength >= 8) {
         newPoints = 11;
       } else if (lastWordLength >= 7) {
         newPoints = 5;
