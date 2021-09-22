@@ -31,10 +31,36 @@ function App() {
     'nootuw',
     'ooottu',
   ];
+
+  const [usedWords, setUsedWords] = useState([]);
+  useEffect(() => {
+    if (usedWords.length > 0) {
+      let newPoints;
+
+      const lastWordLength = usedWords[usedWords.length - 1].length;
+
+      if (lastWordLength >= 8) {
+        newPoints = 11;
+      } else if (lastWordLength >= 7) {
+        newPoints = 5;
+      } else if (lastWordLength >= 6) {
+        newPoints = 3;
+      } else if (lastWordLength >= 5) {
+        newPoints = 2;
+      } else {
+        newPoints = 1;
+      }
+
+      const newScore = score + newPoints;
+
+      setScore(newScore);
+    }
+  }, [usedWords]);
+
   const boardSize = 5;
   const row = new Array(boardSize);
 
-  const [usedWords, setUsedWords] = useState([]);
+  const [score, setScore] = useState(0);
 
   const [gamePlaying, setGamePlaying] = useState(false);
 
@@ -117,10 +143,18 @@ function App() {
   };
 
   const addWord = () => {
-    setUsedWords([...usedWords, currentWord]);
-    setLastSelected(null);
-    setCurrentWord('');
-    setLetterSelected(false);
+    if (currentWord.length > 2 && !usedWords.includes(currentWord)) {
+      setUsedWords([...usedWords, currentWord]);
+      setLastSelected(null);
+      setCurrentWord('');
+      setLetterSelected(false);
+    }
+    if (currentWord.length < 2) {
+      window.alert('Words must be at least 3 letters');
+    }
+    if (usedWords.includes(currentWord)) {
+      window.alert(`${currentWord} has already been used!`);
+    }
   };
 
   const randomizeBoard = () => {
@@ -159,6 +193,7 @@ function App() {
       <h1>Boggle</h1>
       <Board selectLetter={selectLetter} boardLayout={boardLayout}></Board>
       <CurrentWordDisplay
+        score={score}
         usedWords={usedWords}
         currentWord={currentWord}
       ></CurrentWordDisplay>
@@ -172,7 +207,7 @@ function App() {
 }
 
 function CurrentWordDisplay(props) {
-  const { currentWord, usedWords } = props;
+  const { currentWord, usedWords, score } = props;
 
   return (
     <div>
@@ -180,10 +215,11 @@ function CurrentWordDisplay(props) {
       <h3>{currentWord && currentWord}</h3>
       <h2>Used Words: </h2>
       <h3>
-        {usedWords.map((word) => {
-          return <div>{word}</div>;
+        {usedWords.map((word, idx) => {
+          return <div key={idx}>{word}</div>;
         })}
       </h3>
+      <h2>Score: {score}</h2>
     </div>
   );
 }
