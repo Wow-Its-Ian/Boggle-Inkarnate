@@ -43,39 +43,42 @@ function App() {
   const selectLetter = (row, cell) => {
     const letter = boardLayout[row][cell];
     let wordInProgress = currentWord;
-    // if (!letterSelected) {
+    if (letterSelected) {
+      if (lastSelected) {
+        // console.log('lastSelected: ', lastSelected);
+        // console.log('lastSelected[0] + 1: ', lastSelected[0] + 1);
+        // console.log('lastSelected[1] + 1: ', lastSelected[1] + 1);
+        // console.log('lastSelected[1] - 1: ', lastSelected[1] - 1);
+        // console.log('lastSelected[1]: ', lastSelected[1]);
+        // console.log('row: ', row);
 
-    if (lastSelected) {
-      // console.log('lastSelected: ', lastSelected);
-      // console.log('lastSelected[0] + 1: ', lastSelected[0] + 1);
-      // console.log('lastSelected[1] + 1: ', lastSelected[1] + 1);
-      // console.log('lastSelected[1] - 1: ', lastSelected[1] - 1);
-      // console.log('lastSelected[1]: ', lastSelected[1]);
-      // console.log('row: ', row);
-
-      if (
-        row === lastSelected[0] + 1 ||
-        row === lastSelected[0] - 1 ||
-        row === lastSelected[0]
-      ) {
         if (
-          cell === lastSelected[1] + 1 ||
-          cell === lastSelected[1] - 1 ||
-          cell === lastSelected[1]
+          row === lastSelected[0] + 1 ||
+          row === lastSelected[0] - 1 ||
+          row === lastSelected[0]
         ) {
-          console.log('VALID CELL: ', letter);
+          if (
+            cell === lastSelected[1] + 1 ||
+            cell === lastSelected[1] - 1 ||
+            cell === lastSelected[1]
+          ) {
+            console.log('VALID CELL: ', letter);
+            setCurrentWord(wordInProgress + letter);
+            setLastSelected([row, cell]);
+          } else {
+            console.log('INVALID CELL: ', letter);
+          }
         } else {
           console.log('INVALID CELL: ', letter);
         }
-      } else {
-        console.log('INVALID CELL: ', letter);
       }
     }
-
-    console.log('wordInProgress + letter: ', wordInProgress + letter);
-    setCurrentWord(wordInProgress + letter);
-
-    setLastSelected([row, cell]);
+    if (!letterSelected) {
+      console.log('wordInProgress + letter: ', wordInProgress + letter);
+      setCurrentWord(wordInProgress + letter);
+      setLetterSelected(true);
+      setLastSelected([row, cell]);
+    }
 
     // const newValidCells = [];
 
@@ -142,7 +145,19 @@ function App() {
     >
       <h1>Boggle</h1>
       <Board selectLetter={selectLetter} boardLayout={boardLayout}></Board>
+      <CurrentWordDisplay currentWord={currentWord}></CurrentWordDisplay>
       <StartButton randomizeBoard={randomizeBoard}></StartButton>
+    </div>
+  );
+}
+
+function CurrentWordDisplay(props) {
+  const { currentWord } = props;
+
+  return (
+    <div>
+      <h2>Current Word: </h2>
+      <h3>{currentWord && currentWord}</h3>
     </div>
   );
 }
