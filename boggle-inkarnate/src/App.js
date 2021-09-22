@@ -1,9 +1,62 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+  const dice = [
+    'aaafrs',
+    'aaeeee',
+    'aafirs',
+    'adennn',
+    'aeeeem',
+    'aeegmu',
+    'aegmnn',
+    'afirsy',
+    'bjkqxz',
+    'ccenst',
+    'ceiilt',
+    'ceilpt',
+    'ceipst',
+    'ddhnot',
+    'dhhlor',
+    'dhlnor',
+    'dhlnor',
+    'eiiitt',
+    'emottt',
+    'ensssu',
+    'fiprsy',
+    'gorrvw',
+    'iprrry',
+    'nootuw',
+    'ooottu',
+  ];
+  const boardSize = 5;
+  const row = new Array(boardSize);
+
+  const [boardLayout, setBoardLayout] = useState([row, row, row, row, row]);
+
+  const randomizeBoard = () => {
+    let copyDice = [...dice];
+    const copyBoard = [...boardLayout];
+
+    for (let i = 0; i < boardLayout.length; i++) {
+      const currentRow = [...copyBoard[i]];
+
+      for (let j = 0; j < currentRow.length; j++) {
+        const dieIdx = Math.floor(Math.random() * copyDice.length);
+
+        const letterIdx = Math.floor(Math.random() * 6);
+
+        currentRow[j] = copyDice[dieIdx][letterIdx];
+
+        copyDice.splice(dieIdx, 1);
+      }
+      console.log('currentRow: ', currentRow);
+      copyBoard[i] = currentRow;
+    }
+    setBoardLayout(copyBoard);
+  };
   return (
     <div
       className="App"
@@ -15,17 +68,15 @@ function App() {
       }}
     >
       <h1>Boggle</h1>
-      <Board></Board>
-      <StartButton></StartButton>
+      <Board boardLayout={boardLayout}></Board>
+      <StartButton randomizeBoard={randomizeBoard}></StartButton>
     </div>
   );
 }
 
-function Board() {
-  const boardSize = 5;
-  const row = new Array(boardSize);
-
-  const [boardLayout, setBoardLayout] = useState([row, row, row, row, row]);
+function Board(props) {
+  const boardLayout = props.boardLayout;
+  // randomizeBoard();
 
   return (
     <div
@@ -347,14 +398,14 @@ function Board() {
           fontSize: '50px',
         }}
       >
-        {boardLayout[4][5]}
+        {boardLayout[4][4]}
       </div>
     </div>
   );
 }
 
-function StartButton() {
-  return <button>Start Game</button>;
+function StartButton(props) {
+  return <button onClick={props.randomizeBoard}>Start Game</button>;
 }
 
 export default App;
